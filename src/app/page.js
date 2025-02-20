@@ -1,6 +1,7 @@
 'use client'
 import { ContactInfoStep } from "@/components/ContactInfoStep";
 import { FormHeader } from "@/components/FormHeader";
+import { ProfileInfoStep } from "@/components/ProfileInfoStep";
 import { UserInfoStep } from "@/components/UserInfoStep";
 import { useEffect, useState } from "react";
 
@@ -14,7 +15,9 @@ export default function Home() {
     email: "",
     phoneNumber: "",
     password: "",
-    confirmPassword: ""
+    confirmPassword: "",
+    date: "",
+    profileImage: ""
   });
 
   const [formErrors, setFormErrors] = useState({
@@ -24,10 +27,12 @@ export default function Home() {
     email: "",
     phoneNumber: "",
     password: "",
-    confirmPassword: ""
+    confirmPassword: "",
+    date: "",
+    profileImage: ""
   })
 
-  const steps = [UserInfoStep, ContactInfoStep];
+  const steps = [UserInfoStep, ContactInfoStep, ProfileInfoStep];
   const Component = steps[currentStep];
 
   const prevStep = () => {
@@ -35,6 +40,7 @@ export default function Home() {
   }
 
   const nextStep = () => {
+    if (currentStep == steps.length - 1) return;
     setCurrentStep((prev) => prev + 1);
 
     window.localStorage.setItem('multi-step-form', JSON.stringify({ formValues, currentStep: currentStep + 1 }));
@@ -49,19 +55,26 @@ export default function Home() {
     setCurrentStep(localStorage.currentStep)
   }, [])
 
-  return (
-    <main className="w-[480px] h-[655px] bg-white p-8">
-      <FormHeader />
 
-      <Component
-        formValues={formValues}
-        setFormValues={setFormValues}
-        formErrors={formErrors}
-        setFormErrors={setFormErrors}
-        currentStep={currentStep}
-        nextStep={nextStep}
-        prevStep={prevStep}
-      />
+  const isEqual = currentStep == steps.length
+
+  return (
+    <main className="w-[480px] max-h-[655px] h-fit bg-white rounded-xl p-8">
+      <FormHeader title={isEqual ? "You're All Set 🔥" : "Join Us 😎"} description={
+        isEqual ? "We have received your submission. Thank you!" : "Please provide all current information accurately."
+      } />
+
+      {
+        currentStep < steps.length && <Component
+          formValues={formValues}
+          setFormValues={setFormValues}
+          formErrors={formErrors}
+          setFormErrors={setFormErrors}
+          currentStep={currentStep}
+          nextStep={nextStep}
+          prevStep={prevStep}
+        />
+      }
     </main>
   );
 }

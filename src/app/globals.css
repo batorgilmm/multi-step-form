@@ -1,3 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.word {
+  display: inline-block;
+  animation: reveal 1.3s cubic-bezier(0.19, 1, 0.22, 1);
+  animation-delay: calc(0.03s * var(--index));
+  animation-fill-mode: backwards;
+}
+
+@keyframes reveal {
+  0% {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
